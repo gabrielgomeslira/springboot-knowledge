@@ -1,4 +1,4 @@
-package com.example.auth_api_learning.infra.security;
+package com.example.loginauthapi.infra.security;
 
 import com.example.auth_api_learning.domain.user.User;
 import com.example.auth_api_learning.repositories.UserRepository;
@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
