@@ -1,13 +1,13 @@
-package com.example.auth_api_learning;
+package com.spring.basicapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AuthApiLearningApplicationTests {
+class BasicApiApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
