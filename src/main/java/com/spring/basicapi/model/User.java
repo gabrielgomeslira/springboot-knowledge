@@ -21,8 +21,8 @@ public class User {
     @Column(name= "password")
     private String password;
 
-    @Column(name = "users", nullable = false)
-    private String user;
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 
     @Column(name = "balance")
     private Long balance;
