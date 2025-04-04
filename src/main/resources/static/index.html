@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Simples</title>
+</head>
+<body>
+<h1>task</h1>
+
+
+<input type="text" id="taskName" placeholder="Nome da task">
+<input type="number" id="taskIdUser" placeholder="Nome da taskUserId">
+<button onclick="createTask()">Criar task</button>
+
+<h2>task</h2>
+<ul id="taskList"></ul>
+
+<script>
+    const apiUrl = "http://localhost:8080";
+
+    function getTasks() {
+        fetch(apiUrl + "/task/list")
+            .then(response => response.json())
+            .then(data => {
+                let taskList = document.getElementById("taskList");
+                taskList.innerHTML = "";
+                data.forEach(task => {
+                    taskList.innerHTML += `
+                            <li>
+                                ${task.description}
+                                <button onclick="deleteTask(${task.id})">Excluir</button>
+                            </li>
+                        `;
+                });
+            })
+            .catch(error => console.error("Erro ao buscar tarefas:", error));
+    }
+
+
+    function createTask() {
+        const taskName = document.getElementById("taskName").value;
+        const taskIdUser = document.getElementById("taskIdUser").value;
+
+        fetch(apiUrl + "/task/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ description: taskName, user_id: taskIdUser })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro ao criar tarefa");
+                return response.json();
+            })
+            .then(() => {
+                document.getElementById("taskName").value = "";
+                getTasks();
+            })
+            .catch(error => console.error(error));
+    }
+
+    function deleteTask(id) {
+        fetch(apiUrl + `/task/delete/${id}`, { method: "DELETE" })
+            .then(() => getTasks())
+            .catch(error => console.error("Erro ao excluir tarefa:", error));
+    }
+
+    getTasks();
+</script>
+</body>
+</html>

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class TaskService {
+
     @Autowired
     TaskRepo taskRepo;
 
@@ -36,5 +37,21 @@ public class TaskService {
     public Task getTaskById(Long id) {
         Optional<Task> task = taskRepo.findById(id);
         return task.orElse(null);
+    }
+
+    public Task deleteTaskById(Long id) {
+        if (!taskRepo.existsById(id)) {
+            throw new RuntimeException("Task not found with ID: " + id);
+        }
+        taskRepo.deleteById(id);
+        return null;
+    }
+
+
+    public boolean existsById(Long id) {
+        if (taskRepo.existsById(id)) {
+            return true;
+        } else
+            return false;
     }
 }
