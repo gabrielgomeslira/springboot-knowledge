@@ -6,7 +6,6 @@ import com.spring.basicapi.model.User;
 import com.spring.basicapi.repository.TaskRepo;
 import com.spring.basicapi.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class TaskService {
         Task task = new Task();
         task.setDescription(taskDTO.getDescription());
         Random random = new Random();
-        Long randomValue = random.nextLong(3) + 15;
+        long randomValue = random.nextLong(10, 26);
         task.setValue(randomValue);
         task.setStatus(false);
         task.setUser(user);
@@ -36,12 +35,20 @@ public class TaskService {
 
     }
 
+
     public List<Task> getAllTasks(){ return taskRepo.findAll();
     }
 
-    public Task getTaskById(Long id) {
-        Optional<Task> task = taskRepo.findById(id);
-        return task.orElse(null);
+    public Task markTaskAsCompleted(Long userId) {
+        Task task = taskRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + userId));
+
+        task.setStatus(true);
+        return taskRepo.save(task);
+    }
+
+    public List<Task> getTasksByUserId(Long userId) {
+        return taskRepo.findByUserId(userId);
     }
 
     public Task deleteTaskById(Long id) {

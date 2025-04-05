@@ -4,6 +4,7 @@ import com.spring.basicapi.model.Task;
 import com.spring.basicapi.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
@@ -28,11 +29,22 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    @GetMapping("/")
-    public Task getTaskById(@RequestBody Long id){
-        return Optional.ofNullable(taskService.getTaskById(id))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERRO WHEN GET TASK"));
+    @GetMapping("/list/user")
+    public List<Task> getTasksByUserId(@RequestParam("userId") Long userId) {
+        return taskService.getTasksByUserId(userId);
     }
+
+
+    @PutMapping("/complete")
+    public ResponseEntity<?> completeTask(@RequestParam("id") Long id) {
+        try {
+            Task updatedTask = taskService.markTaskAsCompleted(id);
+            return ResponseEntity.ok(updatedTask);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @DeleteMapping("/delete/{id}")
     public Task deleteTaskById(@PathVariable Long id){

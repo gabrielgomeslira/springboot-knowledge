@@ -6,13 +6,15 @@
     <title>CRUD Simples</title>
 </head>
 <body>
+<h1>Login</h1>
+<input type="text" id="username" placeholder="username">
+<input type="text" id="password" placeholder="password">
+<button onclick="loginUser()">Login</button>
+
 <h1>task</h1>
-
-
 <input type="text" id="taskName" placeholder="Nome da task">
-<input type="number" id="taskIdUser" placeholder="Nome da taskUserId">
+<input hidden="true" type="number" id="taskIdUser" placeholder="id">
 <button onclick="createTask()">Criar task</button>
-
 <h2>task</h2>
 <ul id="taskList"></ul>
 
@@ -20,7 +22,8 @@
     const apiUrl = "http://localhost:8080";
 
     function getTasks() {
-        fetch(apiUrl + "/task/list")
+        const taskIdUser = document.getElementById("taskIdUser").value;
+        fetch(apiUrl + "/task/list/user?userId=" + taskIdUser)
             .then(response => response.json())
             .then(data => {
                 let taskList = document.getElementById("taskList");
@@ -28,6 +31,7 @@
                 data.forEach(task => {
                     taskList.innerHTML += `
                             <li>
+                                <button onclick="completedTask(${task.id})">Do</button>
                                 ${task.status}
                                 ${task.description}
                                 ${task.value}
@@ -36,7 +40,25 @@
                         `;
                 });
             })
-            .catch(error => console.error("Erro ao buscar tarefas:", error));
+            .catch(error => console.error("Erro when try to search for tasks:", error));
+    }
+
+    function loginUser(){
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        fetch(apiUrl + "/user/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: username, password: password })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error ("Erro when login");
+            return response.json();
+        })
+            .then(data => {
+                document.getElementById("taskIdUser").value = data.id;
+                getTasks()
+            })
     }
 
 
@@ -50,7 +72,7 @@
             body: JSON.stringify({ description: taskName, user_id: taskIdUser })
         })
             .then(response => {
-                if (!response.ok) throw new Error("Erro ao criar tarefa");
+                if (!response.ok) throw new Error("Erro when created task");
                 return response.json();
             })
             .then(() => {
@@ -63,10 +85,15 @@
     function deleteTask(id) {
         fetch(apiUrl + `/task/delete/${id}`, { method: "DELETE" })
             .then(() => getTasks())
-            .catch(error => console.error("Erro ao excluir tarefa:", error));
+            .catch(error => console.error("Erro when delete task:", error));
     }
 
-    getTasks();
+    function completedTask(id){
+        fetch(apiUrl + `/task/complete?id=${id}`, { method: "PUT" })
+            .then(() => getTasks())
+            .catch(error => console.error("Error when completed task:", error));
+        getTasks()
+    }
 </script>
 </body>
 </html>
