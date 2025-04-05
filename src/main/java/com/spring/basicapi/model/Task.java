@@ -29,4 +29,7 @@ public class Task {
 
     @Column(name = "value")
     private Long value;
+
+    @Column(name = "status")
+    private Boolean status;
 }

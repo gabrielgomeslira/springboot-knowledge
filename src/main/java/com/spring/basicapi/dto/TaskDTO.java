@@ -8,6 +8,7 @@ import lombok.Setter;
 public class TaskDTO {
     private Long user_id;
     private String description;
+    private Boolean status;
     private Long value;
 
 }

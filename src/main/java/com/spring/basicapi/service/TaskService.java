@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class TaskService {
@@ -26,7 +27,10 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("User not found!"));
         Task task = new Task();
         task.setDescription(taskDTO.getDescription());
-        task.setValue(taskDTO.getValue());
+        Random random = new Random();
+        Long randomValue = random.nextLong(3) + 15;
+        task.setValue(randomValue);
+        task.setStatus(false);
         task.setUser(user);
         return taskRepo.save(task);
 

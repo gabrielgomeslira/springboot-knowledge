@@ -28,7 +28,9 @@
                 data.forEach(task => {
                     taskList.innerHTML += `
                             <li>
+                                ${task.status}
                                 ${task.description}
+                                ${task.value}
                                 <button onclick="deleteTask(${task.id})">Excluir</button>
                             </li>
                         `;
