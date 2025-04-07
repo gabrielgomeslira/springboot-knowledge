@@ -6,16 +6,25 @@
     <title>CRUD Simples</title>
 </head>
 <body>
-<h1>Login</h1>
+
+<input hidden="true" disabled type="number" id="taskIdUser" placeholder="id_user">
+<span>User: <span id="LoginUsername"></span></span>
+<!-- need to make a backend to create user -->
+<h1>create user</h1>
+<input type="text" id="create_username" placeholder="username">
+<input type="text" id="create_password" placeholder="password">
+<button onclick="createUser()">Login</button>
+
+<h1>login</h1>
 <input type="text" id="username" placeholder="username">
 <input type="text" id="password" placeholder="password">
 <button onclick="loginUser()">Login</button>
 
-<h1>task</h1>
+<h1>task create</h1>
 <input type="text" id="taskName" placeholder="Nome da task">
-<input hidden="true" type="number" id="taskIdUser" placeholder="id">
+
 <button onclick="createTask()">Criar task</button>
-<h2>task</h2>
+<h1>tasklist</h1>
 <ul id="taskList"></ul>
 
 <script>
@@ -57,6 +66,8 @@
         })
             .then(data => {
                 document.getElementById("taskIdUser").value = data.id;
+                document.getElementById("LoginUsername").textContent = data.username;
+
                 getTasks()
             })
     }
