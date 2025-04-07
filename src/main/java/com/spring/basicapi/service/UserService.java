@@ -4,7 +4,6 @@ import com.spring.basicapi.dto.LoginResponse;
 import com.spring.basicapi.dto.UserDTO;
 import com.spring.basicapi.model.User;
 import com.spring.basicapi.repository.UserRepo;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

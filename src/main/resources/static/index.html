@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Simples</title>
+    <title>tasks</title>
 </head>
 <body>
 
 <input hidden="true" disabled type="number" id="taskIdUser" placeholder="id_user">
 <span>User: <span id="LoginUsername"></span></span>
+
 <!-- need to make a backend to create user -->
+
 <h1>create user</h1>
 <input type="text" id="create_username" placeholder="username">
 <input type="text" id="create_password" placeholder="password">
@@ -19,10 +21,10 @@
 <input type="text" id="username" placeholder="username">
 <input type="text" id="password" placeholder="password">
 <button onclick="loginUser()">Login</button>
+<p id="loginError" style="color: red; margin-top: 10px;"></p>
 
 <h1>task create</h1>
-<input type="text" id="taskName" placeholder="Nome da task">
-
+<input type="input" id="taskName" placeholder="Nome da task">
 <button onclick="createTask()">Criar task</button>
 <h1>tasklist</h1>
 <ul id="taskList"></ul>
@@ -40,8 +42,7 @@
                 data.forEach(task => {
                     taskList.innerHTML += `
                             <li>
-                                <button onclick="completedTask(${task.id})">Do</button>
-                                ${task.status}
+                                <input value="${task.status}" ${task.status ? 'checked' : ''} type="checkbox" onclick="completedTask(${task.id})"></input>
                                 ${task.description}
                                 ${task.value}
                                 <button onclick="deleteTask(${task.id})">Excluir</button>
@@ -52,24 +53,32 @@
             .catch(error => console.error("Erro when try to search for tasks:", error));
     }
 
-    function loginUser(){
+    function loginUser() {
+        document.getElementById("loginError").textContent = "";
+
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
+
         fetch(apiUrl + "/user/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username: username, password: password })
         })
-        .then(response => {
-            if (!response.ok) throw new Error ("Erro when login");
-            return response.json();
-        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Wrong username or password");
+                }
+                return response.json();
+            })
             .then(data => {
                 document.getElementById("taskIdUser").value = data.id;
                 document.getElementById("LoginUsername").textContent = data.username;
 
-                getTasks()
+                getTasks();
             })
+            .catch(error => {
+                document.getElementById("loginError").textContent = error.message;
+            });
     }
 
 
@@ -104,6 +113,26 @@
             .then(() => getTasks())
             .catch(error => console.error("Error when completed task:", error));
         getTasks()
+    }
+
+    function createUser(){
+        const username = document.getElementById("create_username").value;
+        const password = document.getElementById("create_password").value;
+        fetch(apiUrl + "/user/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: username, password: password })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error ("Erro when create user");
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("taskIdUser").value = data.id;
+                document.getElementById("LoginUsername").textContent = data.username;
+
+                getTasks()
+            })
     }
 </script>
 </body>
