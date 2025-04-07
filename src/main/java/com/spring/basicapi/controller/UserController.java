@@ -33,6 +33,11 @@ public class UserController {
         return userService.loginUser(userDTO);
     }
 
+    @GetMapping("/balance/user")
+    public Long getBalance(@RequestParam("userId") Long userId) {
+        return userService.getBalance(userId);
+    }
+
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();

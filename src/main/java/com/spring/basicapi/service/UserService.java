@@ -21,6 +21,7 @@ public class UserService {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
+        user.setBalance(0L);
         return userRepo.save(user);
     }
 
@@ -41,6 +42,13 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepo.findAll();
     }
+
+    public Long getBalance(Long userId) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+        return user.getBalance();
+    }
+
 
     public User getUserById(Long id) {
         Optional<User> user = userRepo.findById(id);

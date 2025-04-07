@@ -7,15 +7,14 @@
 </head>
 <body>
 
-<input hidden="true" disabled type="number" id="taskIdUser" placeholder="id_user">
+<input type="hidden" id="taskIdUser">
 <span>User: <span id="LoginUsername"></span></span>
-
-<!-- need to make a backend to create user -->
+<span>$: <span id="userBalance"></span></span>
 
 <h1>create user</h1>
 <input type="text" id="create_username" placeholder="username">
 <input type="text" id="create_password" placeholder="password">
-<button onclick="createUser()">Login</button>
+<button onclick="createUser()">Create</button>
 
 <h1>login</h1>
 <input type="text" id="username" placeholder="username">
@@ -26,6 +25,7 @@
 <h1>task create</h1>
 <input type="input" id="taskName" placeholder="Nome da task">
 <button onclick="createTask()">Criar task</button>
+
 <h1>tasklist</h1>
 <ul id="taskList"></ul>
 
@@ -41,13 +41,13 @@
                 taskList.innerHTML = "";
                 data.forEach(task => {
                     taskList.innerHTML += `
-                            <li>
-                                <input value="${task.status}" ${task.status ? 'checked' : ''} type="checkbox" onclick="completedTask(${task.id})"></input>
-                                ${task.description}
-                                ${task.value}
-                                <button onclick="deleteTask(${task.id})">Excluir</button>
-                            </li>
-                        `;
+                        <li>
+                            <input value="${task.status}" ${task.status ? 'checked' : ''} type="checkbox" onclick="completedTask(${task.id})"></input>
+                            ${task.description}
+                            ${task.value}
+                            <button onclick="deleteTask(${task.id})">Excluir</button>
+                        </li>
+                    `;
                 });
             })
             .catch(error => console.error("Erro when try to search for tasks:", error));
@@ -73,14 +73,24 @@
             .then(data => {
                 document.getElementById("taskIdUser").value = data.id;
                 document.getElementById("LoginUsername").textContent = data.username;
-
                 getTasks();
+                getBalance();
             })
             .catch(error => {
                 document.getElementById("loginError").textContent = error.message;
             });
     }
 
+    function getBalance() {
+        const taskIdUser = document.getElementById("taskIdUser").value;
+        fetch(apiUrl + "/user/balance/user?userId=" + taskIdUser)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById("userBalance").textContent = data !== undefined ? data : "N/A";
+            })
+            .catch(error => console.error("Erro when try to search for balance:", error));
+    }
 
     function createTask() {
         const taskName = document.getElementById("taskName").value;
@@ -108,14 +118,16 @@
             .catch(error => console.error("Erro when delete task:", error));
     }
 
-    function completedTask(id){
+    function completedTask(id) {
         fetch(apiUrl + `/task/complete?id=${id}`, { method: "PUT" })
-            .then(() => getTasks())
+            .then(() => {
+                getTasks();
+                getBalance();
+            })
             .catch(error => console.error("Error when completed task:", error));
-        getTasks()
     }
 
-    function createUser(){
+    function createUser() {
         const username = document.getElementById("create_username").value;
         const password = document.getElementById("create_password").value;
         fetch(apiUrl + "/user/create", {
@@ -124,15 +136,15 @@
             body: JSON.stringify({ username: username, password: password })
         })
             .then(response => {
-                if (!response.ok) throw new Error ("Erro when create user");
+                if (!response.ok) throw new Error("Erro when create user");
                 return response.json();
             })
             .then(data => {
                 document.getElementById("taskIdUser").value = data.id;
                 document.getElementById("LoginUsername").textContent = data.username;
-
-                getTasks()
-            })
+                getTasks();
+                getBalance();
+            });
     }
 </script>
 </body>

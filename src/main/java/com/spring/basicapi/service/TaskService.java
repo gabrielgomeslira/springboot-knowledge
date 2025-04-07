@@ -7,6 +7,7 @@ import com.spring.basicapi.repository.TaskRepo;
 import com.spring.basicapi.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,11 +40,16 @@ public class TaskService {
     public List<Task> getAllTasks(){ return taskRepo.findAll();
     }
 
+    @Transactional
     public Task markTaskAsCompleted(Long userId) {
+        System.out.println(">>> markTaskAsCompleted CALLED");
         Task task = taskRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Task not found with ID: " + userId));
-
+        User user = task.getUser();
+        long taskValue = task.getValue();
+        user.setBalance(user.getBalance() + taskValue);
         task.setStatus(true);
+        userRepo.save(user);
         return taskRepo.save(task);
     }
 
