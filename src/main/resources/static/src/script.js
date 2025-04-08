@@ -13,19 +13,30 @@ function getTasks() {
         .then(data => {
             let taskList = document.getElementById("taskList");
             taskList.innerHTML = "";
+
             data.forEach(task => {
+                const completedClass = task.status ? "task-completed" : "";
+                const hideCheckbox = task.status ? "hidden" : "";
+
                 taskList.innerHTML += `
-                        <li>
-                            <input value="${task.status}" ${task.status ? 'checked' : ''} type="checkbox" onclick="completedTask(${task.id})"></input>
-                            ${task.description}
-                            ${task.value}
-                            <button onclick="deleteTask(${task.id})">Excluir</button>
+                        <li class="task-item ${task.status ? "task-completed" : ""}">
+                            <span class="custom-checkbox ${task.status ? "hidden" : ""}" onclick="completedTask(${task.id}, ${task.value})">
+                                <i class="fa-regular fa-square"></i>
+                            </span>
+                            <span class="task-desc">${task.description}</span>
+                            <span class="task-value">
+                                <i class="fa-solid fa-coins"></i> ${task.value}
+                            </span>
+                            <span class="delete-task" onclick="deleteTask(${task.id})">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </span>
                         </li>
                     `;
             });
         })
         .catch(error => console.error("Erro when try to search for tasks:", error));
 }
+
 
 function loginUser() {
 
@@ -96,9 +107,12 @@ function deleteTask(id) {
         .catch(error => console.error("Erro when delete task:", error));
 }
 
-function completedTask(id) {
+function completedTask(id, value) {
     fetch(apiUrl + `/task/complete?id=${id}`, { method: "PUT" })
         .then(() => {
+            console.log(value)
+            console.log(id)
+            showFloatingValue(value);
             getTasks();
             getBalance();
         })
@@ -140,8 +154,24 @@ window.onload = function () {
     }
 };
 
+function showFloatingValue(value) {
+    const balanceElement = document.querySelector(".balance");
+    const floatElem = document.createElement("div");
+
+    floatElem.className = "floating-value";
+    floatElem.textContent = `+${value}`;
+
+    balanceElement.appendChild(floatElem);
+
+    setTimeout(() => {
+        floatElem.remove();
+    }, 1200);
+}
+
+
 function logout() {
     localStorage.removeItem("loggedUserId");
     localStorage.removeItem("loggedUsername");
     showSection("loginSection");
 }
+
