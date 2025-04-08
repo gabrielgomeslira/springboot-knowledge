@@ -41,17 +41,23 @@ public class TaskService {
     }
 
     @Transactional
-    public Task markTaskAsCompleted(Long userId) {
-        System.out.println(">>> markTaskAsCompleted CALLED");
-        Task task = taskRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + userId));
+    public Task markTaskAsCompleted(Long taskId) {
+        Task task = taskRepo.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + taskId));
+
+        if (task.getStatus()) {
+            throw new RuntimeException("Task is already completed");
+        }
+
         User user = task.getUser();
         long taskValue = task.getValue();
         user.setBalance(user.getBalance() + taskValue);
         task.setStatus(true);
+
         userRepo.save(user);
         return taskRepo.save(task);
     }
+
 
     public List<Task> getTasksByUserId(Long userId) {
         return taskRepo.findByUserId(userId);
