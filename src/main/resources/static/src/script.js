@@ -13,25 +13,32 @@ function getTasks() {
         .then(data => {
             let taskList = document.getElementById("taskList");
             taskList.innerHTML = "";
+            if (data.length === 0) {
+                emptyMessage.style.display = "block";
+            } else {
+                emptyMessage.style.display = "none";
+            }
+
+            data.sort((a, b) => a.status - b.status);
 
             data.forEach(task => {
                 const completedClass = task.status ? "task-completed" : "";
                 const hideCheckbox = task.status ? "hidden" : "";
 
                 taskList.innerHTML += `
-                        <li class="task-item ${task.status ? "task-completed" : ""}">
-                            <span class="custom-checkbox ${task.status ? "hidden" : ""}" onclick="completedTask(${task.id}, ${task.value})">
-                                <i class="fa-regular fa-square"></i>
-                            </span>
-                            <span class="task-desc">${task.description}</span>
-                            <span class="task-value">
-                                <i class="fa-solid fa-coins"></i> ${task.value}
-                            </span>
-                            <span class="delete-task" onclick="deleteTask(${task.id})">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </span>
-                        </li>
-                    `;
+                    <li class="task-item ${completedClass}">
+                        <span class="custom-checkbox ${hideCheckbox}" onclick="completedTask(${task.id}, ${task.value})">
+                            <i class="fa-regular fa-square"></i>
+                        </span>
+                        <span class="task-desc">${task.description}</span>
+                        <span class="task-value">
+                            <i class="fa-solid fa-coins"></i> ${task.value}
+                        </span>
+                        <span class="delete-task" onclick="deleteTask(${task.id})">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </span>
+                    </li>
+                `;
             });
         })
         .catch(error => console.error("Erro when try to search for tasks:", error));
@@ -168,10 +175,21 @@ function showFloatingValue(value) {
     }, 1200);
 }
 
+function goToStore() {
+    document.body.innerHTML = `
+        <div class="coming-soon">
+            <i class="fa-solid fa-shop"></i>
+            <h1>Coming Soon!</h1>
+            <button onclick="window.location.reload()">Voltar</button>
+        </div>
+    `;
+}
+
 
 function logout() {
     localStorage.removeItem("loggedUserId");
     localStorage.removeItem("loggedUsername");
     showSection("loginSection");
 }
+
 

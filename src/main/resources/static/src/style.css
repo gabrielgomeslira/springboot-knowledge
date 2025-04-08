@@ -77,7 +77,6 @@ h1 {
 
 /* BUTTON STYLE */
 
-
 .button {
     font-weight: bold;
     font-size: 15px;
@@ -280,7 +279,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #212121;
+    background: #ff8906;
     padding: 10px 15px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -290,7 +289,7 @@ h1 {
 }
 
 .task-item:hover {
-    background-color: #2a2a2a;
+    background-color: #af5d01;
 }
 
 /* ANIMAÇÃO DE COMPLETAR */
@@ -314,7 +313,7 @@ h1 {
 }
 
 .task-item .custom-checkbox {
-    color: #ff8906;
+    color: #ffffff;
     font-size: 1.2rem;
     cursor: pointer;
     margin-right: 10px;
@@ -343,7 +342,7 @@ h1 {
     align-items: center;
     gap: 5px;
     font-weight: bold;
-    color: #ff8906;
+    color: #ffffff;
     font-size: 0.9rem;
     margin-left: 10px;
 }
@@ -364,7 +363,7 @@ h1 {
     transform: scale(1.2);
 }
 
-/* FLOATING BALANCE EFFECT */
+
 .floating-value {
     position: absolute;
     color: #49df08;
@@ -388,7 +387,51 @@ h1 {
     }
 }
 
-/* POSITIONING FIX FOR BALANCE WRAPPER */
+
 .balance {
     position: relative;
+}
+
+
+.bottom-icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+
+.logout-icon,
+.store-icon {
+    color: #ff8906;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.logout-icon:hover,
+.store-icon:hover {
+    transform: scale(1.2);
+}
+
+.coming-soon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fffffe;
+    height: 100vh;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+.coming-soon button {
+    margin-top: 20px;
+    background-color: #ff8906;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
 }
