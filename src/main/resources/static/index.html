@@ -6,6 +6,7 @@
     <title>Mini App</title>
     <link rel="stylesheet" href="src/style.css">
     <script src="src/script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
@@ -54,15 +55,27 @@
 
 <!-- Task Section -->
 <div id="taskSection" style="display: none;">
-    <span>User: <span id="LoginUsername"></span></span><br>
-    <span>$: <span id="userBalance">0</span></span>
-
     <h1>Create Task</h1>
-    <input type="text" id="taskName" placeholder="TaskName">
-    <button onclick="createTask()">Criar task</button>
-
+    <div class="user-info">
+        <div class="username">
+            <i class="fa-solid fa-circle-user"></i>
+            <span><span id="LoginUsername"></span></span><br>
+        </div>
+        <div class="balance">
+            <i class="fa-solid fa-coins"></i>
+            <span> <span id="userBalance">0</span></span>
+        </div>
+    </div>
+    <form class="form-wrapper" onsubmit="createTask(); return false;">
+        <div class="input-wrapper">
+            <i class="fa-solid fa-plus"></i>
+            <input type="text" id="taskName" class="task-input" placeholder="Task Name" required autocomplete="off">
+        </div>
+    </form>
     <h1>Task List</h1>
-    <ul id="taskList"></ul>
+
+    <ul id="taskList" class="task-list">
+    </ul>
 
     <button onclick="logout()">Logout</button>
 </div>
