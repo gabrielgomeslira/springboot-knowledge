@@ -213,6 +213,7 @@ h1 {
 
 
 .username{
+    cursor: pointer;
     background-color: #ff8906;
     border-radius: 12px;
     padding: 2px 4px;
@@ -224,10 +225,15 @@ h1 {
 }
 
 .balance{
+    cursor: pointer;
     background-color: #ff8906;
     border-radius: 12px;
     padding: 3px 6px;
     justify-content: center;
+}
+
+.balance:hover{
+    background-color: #773f00;
 }
 
 /* INPUT STYLE/TASKS */

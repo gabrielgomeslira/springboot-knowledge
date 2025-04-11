@@ -28,6 +28,7 @@
             <button class="button" onclick="createUser()">Create</button>
             <p>Already have an account? <a class="signin-button" href="#" onclick="showSection('loginSection')">Login</a></p>
         </form>
+        <p id="createError" style="color: red; margin-top: 10px;"></p>
     </div>
 </div>
 
@@ -52,7 +53,14 @@
         <p>Don't have an account? <a class="signup-button" href="#" onclick="showSection('registerSection')">Sign Up</a></p>
     </div>
 </div>
-
+<!-- Store Section -->
+<div id="storeSection" style="display: none;">
+    <div class="coming-soon">
+        <i class="fa-solid fa-shop"></i>
+        <h1>Coming Soon!</h1>
+        <button onclick=goToTasks()>Voltar</button>
+    </div>
+</div>
 <!-- Task Section -->
 <div id="taskSection" style="display: none;">
     <h1>Create Task</h1>
@@ -76,7 +84,6 @@
     <div id="emptyMessage" class="empty-message" style="display: none;">
         <p>No tasks to show.</p>
     </div>
-
     <div id="bottomIcons" class="bottom-icons">
         <i class="fa-solid fa-right-from-bracket logout-icon" onclick="logout()"></i>
         <i class="fa-solid fa-store store-icon" onclick="goToStore()"></i>

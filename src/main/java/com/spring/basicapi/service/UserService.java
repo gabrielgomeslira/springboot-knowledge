@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.View;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +17,15 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private View error;
 
     public User createUser(UserDTO userDTO) {
+        for (User user : userRepo.findAll()){
+            if (user.getUsername().equals(userDTO.getUsername())){
+                throw new RuntimeException("Username already registered!");
+            }
+        }
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());

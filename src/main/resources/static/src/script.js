@@ -1,7 +1,7 @@
 const apiUrl = "http://localhost:8080";
 
 function showSection(sectionId) {
-    const sections = ['registerSection', 'loginSection', 'taskSection'];
+    const sections = ['registerSection', 'loginSection', 'taskSection', 'storeSection'];
     sections.forEach(id => {
         document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
     });
@@ -77,6 +77,32 @@ function loginUser() {
         });
 }
 
+function createUser() {
+    const username = document.getElementById("create_username").value;
+    const password = document.getElementById("create_password").value;
+    fetch(apiUrl + "/user/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username, password: password })
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Username already exists");
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("taskIdUser").value = data.id;
+            document.getElementById("LoginUsername").textContent = data.username;
+            localStorage.setItem("loggedUserId", data.id);
+            localStorage.setItem("loggedUsername", data.username);
+            showSection('taskSection');
+            getTasks();
+            getBalance();
+        })
+        .catch(error => {
+            document.getElementById("createError").textContent = error.message;
+        });
+}
+
 function getBalance() {
     const taskIdUser = document.getElementById("taskIdUser").value;
     fetch(apiUrl + "/user/balance/user?userId=" + taskIdUser)
@@ -126,25 +152,6 @@ function completedTask(id, value) {
         .catch(error => console.error("Error when completed task:", error));
 }
 
-function createUser() {
-    const username = document.getElementById("create_username").value;
-    const password = document.getElementById("create_password").value;
-    fetch(apiUrl + "/user/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username, password: password })
-    })
-        .then(response => {
-            if (!response.ok) throw new Error("Erro when create user");
-            return response.json();
-        })
-        .then(data => {
-            document.getElementById("taskIdUser").value = data.id;
-            document.getElementById("LoginUsername").textContent = data.username;
-            getTasks();
-            getBalance();
-        });
-}
 
 window.onload = function () {
     const savedUserId = localStorage.getItem("loggedUserId");
@@ -175,14 +182,12 @@ function showFloatingValue(value) {
     }, 1200);
 }
 
+function goToTasks() {
+    showSection("taskSection");
+}
+
 function goToStore() {
-    document.body.innerHTML = `
-        <div class="coming-soon">
-            <i class="fa-solid fa-shop"></i>
-            <h1>Coming Soon!</h1>
-            <button onclick="window.location.reload()">Voltar</button>
-        </div>
-    `;
+    showSection("storeSection");
 }
 
 
